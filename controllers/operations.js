@@ -11,11 +11,10 @@ exports.createUser = async (user)=>{
     let notExists = await this.userExists(user.username);
     if(notExists){
         let newUser = {
-            name:user.name,
-            lastname:user.lastname,
-            email:user.email,
-            username: user.username,
-            password: bcrypt.hashSync(user.password, 10)
+            username:user.username,
+            password: bcrypt.hashSync(user.password, 10),
+            alias:user.alias,
+            rol:user.rol
         };
         User.create(newUser).then((data)=>{
             return data;

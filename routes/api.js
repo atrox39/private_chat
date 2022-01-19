@@ -7,14 +7,20 @@ const operations = require('../controllers/operations');
 const rol = require('../database/models/rol');
 
 router.post('/register', deauth, (req, res)=>{
-    const newUser = req.body;
-    rol.findOne({name:"user"})
-    operations.createUser(newUser).then((user)=>{
-        if(user !== null)
-            res.json({message:"Usuario creado con exito"});
-        else
-            res.json({message:"El usuario ya existe"});
-    });
+    let newUser = req.body;
+    rol.findOne({name:"user"}).then((data)=>{
+        
+        newUser.rol = data._id;
+        console.log(newUser);
+        operations.createUser(newUser).then((user)=>{
+            if(user !== null)
+                res.json({message:"Usuario creado con exito"});
+            else
+                res.json({message:"El usuario ya existe"});
+        });
+    }).catch((err)=>{
+        if(err) res.json({message:"El usuario ya existe"});
+    })
 });
 
 router.post('/login', deauth, passport.authenticate('local'), (req, res)=>{
